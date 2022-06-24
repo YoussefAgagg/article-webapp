@@ -1,43 +1,54 @@
 package com.example.articlewebapp.domain;
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Table(name = "categories")
+/**
+ *  Developed by : Mohamed Ehab Ali
+ *  Date : 24 / 6 / 2022
+ *  Description : Created Category Model :-
+ *      1 - Adding essential attributes and its validation annotations
+ *      2 - Adding essential relationships between this model and the other models
+ *      3 - Overriding equals() and hashCode() methods
+ */
+
+@Table(name = "category")
 @Entity(name = "Category")
+@Data
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
+    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
 
     @NotBlank(message = "Category shouldn't be blank")
     @NotNull(message = "Category shouldn't be null")
-    @Column(name = "cat_name")
+    @Column(name = "name")
     private String name;
 
     @ManyToMany
-    private Set<Article> articles = new HashSet<>();
+    private Set<Article> articles = new HashSet<Article>();
 
-    public Category() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Category category = (Category) o;
+        return id != null && Objects.equals(id, category.id);
     }
 
-    public Category(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

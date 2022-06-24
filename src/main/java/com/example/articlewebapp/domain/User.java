@@ -1,6 +1,10 @@
 package com.example.articlewebapp.domain;
 
 import com.example.articlewebapp.domain.enumerations.Gender;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -10,14 +14,27 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Table(name = "users")
+/**
+ *  Developed by : Mohamed Ehab Ali
+ *  Date : 24 / 6 / 2022
+ *  Description : Created User Model :-
+ *      1 - Adding essential attributes and its validation annotations
+ *      2 - Adding essential relationships between this model and the other models
+ *      3 - Overriding equals() and hashCode() methods
+ *      4 - Followers and Following relationships are commented until reaching the final version of their implementation
+ */
+
+@Table(name = "user")
 @Entity(name = "User")
+@Data
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
+    @Setter(AccessLevel.NONE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @NotBlank(message = "First Name shouldn't be blank")
@@ -76,18 +93,18 @@ public class User {
     private String resetKey;
 
     @OneToMany(mappedBy = "user")
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     Set<Article> user_articles = new HashSet<Article>();
 
     @OneToMany(mappedBy = "user")
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "id", nullable = false)
     Set<Comment> user_comments = new HashSet<Comment>();
 
     @ManyToMany
     @JoinTable(
             name = "users_authorities",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_id")}
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name",referencedColumnName = "id")}
     )
     private Set<Authority> authorities = new HashSet<>();
 
@@ -103,124 +120,16 @@ public class User {
 //            inverseJoinColumns={@JoinColumn(name="ParentId")})
 //    private Set<User> following = new HashSet<User>();
 
-
-
-    public User() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
     }
 
-    public User(String firstName, String lastName, String email, String username, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.username = username;
-        this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public Boolean getValidated() {
-        return isValidated;
-    }
-
-    public void setValidated(Boolean validated) {
-        isValidated = validated;
-    }
-
-    public String getValidationKey() {
-        return validationKey;
-    }
-
-    public void setValidationKey(String validationKey) {
-        this.validationKey = validationKey;
-    }
-
-    public String getResetKey() {
-        return resetKey;
-    }
-
-    public void setResetKey(String resetKey) {
-        this.resetKey = resetKey;
-    }
-
-    public Set<Article> getUser_articles() {
-        return user_articles;
-    }
-
-    public void setUser_articles(Set<Article> user_articles) {
-        this.user_articles = user_articles;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
