@@ -3,6 +3,7 @@ package com.example.articlewebapp.domain;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
 
@@ -13,20 +14,16 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- *  Developed by : Mohamed Ehab Ali
- *  Date : 24 / 6 / 2022
- *  Description : Created Comment Model :-
- *      1 - Adding essential attributes and its validation annotations
- *      2 - Adding essential relationships between this model and the other models
- *      3 - Overriding equals() and hashCode() methods
+ *  @author Mohamed Ehab Ali
+ *  @since 24-6-2022
  */
 
 @Table(name = "comment")
 @Entity(name = "Comment")
 @Data
+@Slf4j
 public class Comment {
     @Id
-    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;

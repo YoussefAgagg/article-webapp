@@ -1,6 +1,7 @@
 package com.example.articlewebapp.domain;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 
 import javax.persistence.Column;
@@ -10,17 +11,14 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 /**
- *  Developed by : Mohamed Ehab Ali
- *  Date : 24 / 6 / 2022
- *  Description : Created Authority Model :-
- *      1 - Adding essential attributes and its validation annotations
- *      2 - Adding essential relationships between this model and the other models
- *      3 - Overriding equals() and hashCode() methods
+ *  @author Mohamed Ehab Ali
+ *  @since 24-6-2022
  */
 
 @Table(name = "authority")
 @Entity(name = "Authority")
 @Data
+@Slf4j
 public class Authority {
     @Id
     @Column(name = "name", nullable = false, unique = true)

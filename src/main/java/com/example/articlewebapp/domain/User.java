@@ -1,9 +1,9 @@
 package com.example.articlewebapp.domain;
 
 import com.example.articlewebapp.domain.enumerations.Gender;
-import lombok.AccessLevel;
+
 import lombok.Data;
-import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
 
@@ -18,21 +18,16 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- *  Developed by : Mohamed Ehab Ali
- *  Date : 24 / 6 / 2022
- *  Description : Created User Model :-
- *      1 - Adding essential attributes and its validation annotations
- *      2 - Adding essential relationships between this model and the other models
- *      3 - Overriding equals() and hashCode() methods
- *      4 - Followers and Following relationships are commented until reaching the final version of their implementation
+ *  @author Mohamed Ehab Ali
+ *  @since 24-6-2022
  */
 
 @Table(name = "user")
 @Entity(name = "User")
 @Data
+@Slf4j
 public class User {
     @Id
-    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
