@@ -1,6 +1,7 @@
 package com.example.articlewebapp.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 
@@ -17,7 +18,8 @@ import java.util.Objects;
 
 @Table(name = "authority")
 @Entity(name = "Authority")
-@Data
+@Setter
+@Getter
 @Slf4j
 public class Authority {
     @Id

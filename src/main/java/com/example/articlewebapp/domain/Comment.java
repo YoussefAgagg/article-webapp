@@ -1,7 +1,6 @@
 package com.example.articlewebapp.domain;
 
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
@@ -20,7 +19,8 @@ import java.util.Objects;
 
 @Table(name = "comment")
 @Entity(name = "Comment")
-@Data
+@Setter
+@Getter
 @Slf4j
 public class Comment {
     @Id
