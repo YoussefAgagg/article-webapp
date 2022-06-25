@@ -1,17 +1,17 @@
 package com.example.articlewebapp.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
@@ -27,7 +27,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-public class Article {
+public class Article implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
@@ -35,15 +35,18 @@ public class Article {
 
     @NotBlank
     @NotNull
+    @Size(min = 4, max = 50, message="Title should be at least 4 and at most 50 characters")
     @Column(name = "title")
     private String title;
 
+    @Size(max = 500, message="Summary should be at most 500 characters")
     @Column(name = "summary")
     private String summary;
 
     @NotBlank(message = "Article content shouldn't be blank")
     @NotNull(message = "Article must have a content")
     @Lob
+    @Size(min = 3, message="Article content should be at least 3 characters")
     @Column(name = "content")
     private String content;
 

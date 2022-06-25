@@ -1,17 +1,17 @@
 package com.example.articlewebapp.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -25,15 +25,15 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-public class Comment {
+public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Length(max = 2000)
     @NotBlank(message = "Comment shouldn't be blank")
     @NotNull(message = "Comment shouldn't be null")
+        @Size(min = 1, max = 500, message="Comment should be at least 1 and at most 500 characters")
     @Column(name = "text")
     private String text;
 
