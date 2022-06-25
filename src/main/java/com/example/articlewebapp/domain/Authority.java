@@ -3,14 +3,14 @@ package com.example.articlewebapp.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -23,9 +23,10 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-public class Authority {
+public class Authority implements Serializable {
     @Id
     @NotNull
+    @Size(min = 2, max = 50, message="Authority Name should be at least 2 and at most 50 characters")
     private String name;
 
     @Override
