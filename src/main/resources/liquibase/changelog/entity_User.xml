@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="0" author="youssef agagg">
+        <createSequence sequenceName="sequence_generator" startValue="1020" incrementBy="50"/>
+    </changeSet>
+
+
+    <changeSet id="1" author="youssef agagg">
+        <createTable tableName="user">
+            <column name="id" type="bigint" >
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(50)">
+                <constraints unique="true" nullable="false" uniqueConstraintName="ux_user_login"/>
+            </column>
+            <column name="password" type="varchar(255)"/>
+            <column name="first_name" type="varchar(50)"/>
+            <column name="last_name" type="varchar(50)"/>
+            <column name="email" type="varchar(255)">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_user_email"/>
+            </column>
+            <column name="date_of_birth" type="date">
+                <constraints nullable="true" />
+            </column>
+            <column name="activated" type="boolean" valueBoolean="false">
+                <constraints nullable="false" />
+            </column>
+            <column name="activation_key" type="varchar(255)"/>
+            <column name="reset_key" type="varchar(255)"/>
+            <column name="mobile" type="varchar(20)">
+                <constraints nullable="true" />
+            </column>
+            <column name="gender" type="varchar(20)">
+                <constraints nullable="true" />
+            </column>
+            <column name="image_url" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+        </createTable>
+
+
+
+        <createTable tableName="authority">
+            <column name="name" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_authority">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="user_id, authority_name" tableName="user_authority"/>
+
+        <addForeignKeyConstraint baseColumnNames="authority_name"
+                                 baseTableName="user_authority"
+                                 constraintName="fk_authority_name"
+                                 referencedColumnNames="name"
+                                 referencedTableName="authority"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_authority"
+                                 constraintName="fk_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+        <addNotNullConstraint   columnName="password"
+                                columnDataType="varchar()"
+                                tableName="user"/>
+
+    </changeSet>
+    <changeSet id="10" author="youssef agagg">
+
+        <createTable tableName="user_followers_following">
+            <column name="followers_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="user_id, followers_id" tableName="user_followers_following"/>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_followers_following"
+                                 constraintName="fk_user_followers_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+        <addForeignKeyConstraint baseColumnNames="followers_id"
+                                 baseTableName="user_followers_following"
+                                 constraintName="fk_user_followers_follower_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+    </changeSet>
+
+
+</databaseChangeLog>

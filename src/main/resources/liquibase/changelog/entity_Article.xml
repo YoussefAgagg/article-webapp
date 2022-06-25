@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="100" author="youssef agagg">
+        <createTable tableName="article">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="summary" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="content" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="views" type="bigint">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="date_created" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_edited" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+
+        </createTable>
+        <dropDefaultValue tableName="article" columnName="date_created" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="article" columnName="last_edited" columnDataType="${datetimeType}"/>
+    </changeSet>
+
+    <changeSet id="101" author="youssef agagg">
+
+        <createTable tableName="article_category">
+            <column name="category_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="article_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="article_id, category_id" tableName="article_category"/>
+    </changeSet>
+
+    <changeSet id="102" author="youssef">
+
+        <addForeignKeyConstraint baseColumnNames="article_id"
+                                 baseTableName="article_category"
+                                 constraintName="fk_article_category_article_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="article"/>
+
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="article_category"
+                                 constraintName="fk_article_category_category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="category"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="article"
+                                 constraintName="fk_article_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+    </changeSet>
+</databaseChangeLog>

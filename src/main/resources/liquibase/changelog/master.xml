@@ -13,5 +13,10 @@
     <property name="uuidType" value="uuid" dbms="h2, postgresql"/>
     <property name="datetimeType" value="datetime(6)" dbms="mysql, mariadb"/>
     <property name="datetimeType" value="datetime" dbms="oracle, mssql, postgresql, h2"/>
+    <include file="liquibase/changelog/entity_User.xml" relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/entity_Category.xml" relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/entity_Article.xml" relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/entity_Comment.xml"  relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/entity_ArticleLikesDislikes.xml"  relativeToChangelogFile="false"/>
 
-   </databaseChangeLog>
+</databaseChangeLog>

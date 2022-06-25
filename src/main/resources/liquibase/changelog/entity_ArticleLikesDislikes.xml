@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet id="100000" author="youssef agagg">
+        <createTable tableName="article_likes_dislikes">
+
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="article_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="like_type" type="int">
+                <constraints nullable="false" />
+            </column>
+
+        </createTable>
+    </changeSet>
+    <changeSet id="1000001" author="youssef agagg">
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="article_likes_dislikes"
+                                 constraintName="fk_article_likes_dislikes_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+
+        <addForeignKeyConstraint baseColumnNames="article_id"
+                                 baseTableName="article_likes_dislikes"
+                                 constraintName="fk_article_likes_dislikes_article_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="article"/>
+    </changeSet>
+</databaseChangeLog>
