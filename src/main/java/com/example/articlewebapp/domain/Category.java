@@ -1,43 +1,51 @@
 package com.example.articlewebapp.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-@Table(name = "categories")
+/**
+ *  @author Mohamed Ehab Ali
+ *  @since 24-6-2022
+ */
+
+@Table(name = "category")
 @Entity(name = "Category")
+@Setter
+@Getter
+@Slf4j
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
 
     @NotBlank(message = "Category shouldn't be blank")
     @NotNull(message = "Category shouldn't be null")
-    @Column(name = "cat_name")
+    @Column(name = "name")
     private String name;
 
     @ManyToMany
-    private Set<Article> articles = new HashSet<>();
+    private Set<Article> articles = new HashSet<Article>();
 
-    public Category() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Category category = (Category) o;
+        return id != null && Objects.equals(id, category.id);
     }
 
-    public Category(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

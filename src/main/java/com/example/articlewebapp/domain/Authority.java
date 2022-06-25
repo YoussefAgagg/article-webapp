@@ -1,32 +1,41 @@
 package com.example.articlewebapp.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 
-@Table(name = "authorities")
+/**
+ *  @author Mohamed Ehab Ali
+ *  @since 24-6-2022
+ */
+
+@Table(name = "authority")
 @Entity(name = "Authority")
+@Setter
+@Getter
+@Slf4j
 public class Authority {
     @Id
-    @Column(name = "authority_id")
-    private Integer id;
-
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    public Authority() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Authority authority = (Authority) o;
+        return name != null && Objects.equals(name, authority.name);
     }
 
-    public Authority(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

@@ -1,18 +1,31 @@
 package com.example.articlewebapp.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.Objects;
 
-@Table(name = "comments")
+/**
+ *  @author Mohamed Ehab Ali
+ *  @since 24-6-2022
+ */
+
+@Table(name = "comment")
 @Entity(name = "Comment")
+@Setter
+@Getter
+@Slf4j
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
 
     @Length(max = 2000)
@@ -31,34 +44,16 @@ public class Comment {
     @ManyToOne
     private User user;
 
-    public Comment() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Comment comment = (Comment) o;
+        return id != null && Objects.equals(id, comment.id);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Instant getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Instant dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Instant getLastCreated() {
-        return lastCreated;
-    }
-
-    public void setLastCreated(Instant lastCreated) {
-        this.lastCreated = lastCreated;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
