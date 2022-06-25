@@ -56,12 +56,11 @@ public class User implements Serializable {
     @NotBlank(message = "Username shouldn't be blank")
     @NotNull
     @Size(min = 4, max = 50, message="Username should be at least 4 and at most 50 characters")
-    @Column(name = "username", unique = true)
+    @Column(name = "username", unique = true,  length = 50)
     private String username;
 
     @NotBlank(message = "Password shouldn't be blank")
     @NotNull
-    @Size(min = 8, max = 20, message="Password should be at least 8 and at most 20 characters")
     @Column(name = "password")
     @JsonIgnore
     @ToString.Exclude
@@ -76,7 +75,7 @@ public class User implements Serializable {
     @Column(name = "gender")
     private Gender gender;
 
-    @Column(name = "img_url", length = 256)
+    @Column(name = "image_url")
     private String imageUrl;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
