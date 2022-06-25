@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -36,12 +37,14 @@ public class Article implements Serializable {
 
     @NotBlank
     @NotNull
-    @Size(min = 4, max = 50, message="Title should be at least 4 and at most 50 characters")
+    @Size(min = 4, max = 255, message="Title should be at least 4 and at most 255 characters")
     @Column(name = "title")
     private String title;
 
     @Size(max = 500, message="Summary should be at most 500 characters")
     @Column(name = "summary")
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String summary;
 
     @NotBlank(message = "Article content shouldn't be blank")
@@ -84,9 +87,9 @@ public class Article implements Serializable {
     @OneToMany(mappedBy = "article")
     @JsonIgnoreProperties(value = { "user", "article" }, allowSetters = true)
     private Set<Comment> comments = new HashSet<>();
-    @Formula("(select count(user_id) from article_likes_dislikes likes where likes.article_id = id and likes.like_type=1)")
+    @Formula("(select count(*) from article_likes_dislikes likes where likes.article_id = id and likes.like_type=1)")
     private Long likes;
-    @Formula("(select count(user_id) from article_likes_dislikes likes where likes.article_id = id and likes.like_type=0)")
+    @Formula("(select count(*) from article_likes_dislikes likes where likes.article_id = id and likes.like_type=0)")
     private Long dislikes;
 
     @Override
