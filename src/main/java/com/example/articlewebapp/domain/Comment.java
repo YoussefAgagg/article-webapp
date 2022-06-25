@@ -33,7 +33,8 @@ public class Comment implements Serializable {
 
     @NotBlank(message = "Comment shouldn't be blank")
     @NotNull(message = "Comment shouldn't be null")
-        @Size(min = 1, max = 500, message="Comment should be at least 1 and at most 500 characters")
+    @Size(min = 1, max = 500, message="Comment should be at least 1 and at most 500 characters")
+    @Lob
     @Column(name = "text")
     private String text;
 
