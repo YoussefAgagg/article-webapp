@@ -1,7 +1,10 @@
 package com.example.articlewebapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
@@ -14,18 +17,18 @@ import java.util.Objects;
 
 /**
  *  @author Mohamed Ehab Ali
- *  @since 24-6-2022
+ *  @since 1.0
  */
 
 @Table(name = "comment")
-@Entity(name = "Comment")
-@Setter
+@Entity
 @Getter
-@Slf4j
+@Setter
+@ToString
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @Length(max = 2000)
@@ -38,11 +41,20 @@ public class Comment {
     @Column(name = "date_created")
     private Instant dateCreated;
 
-    @Column(name = "last_edit_date")
-    private Instant lastCreated;
+    @Column(name = "last_edited")
+    private Instant lastEdited;
 
-    @ManyToOne
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "articles",  "followers", "following"  }, allowSetters = true)
     private User user;
+
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "comments", "categories", "author" }, allowSetters = true)
+    private Article article;
 
     @Override
     public boolean equals(Object o) {

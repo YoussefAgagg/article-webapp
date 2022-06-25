@@ -1,7 +1,10 @@
 package com.example.articlewebapp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 
@@ -16,18 +19,18 @@ import java.util.Set;
 
 /**
  *  @author Mohamed Ehab Ali
- *  @since 24-6-2022
+ *  @since 1.0
  */
 
 @Table(name = "article")
-@Entity(name = "Article")
-@Setter
+@Entity
 @Getter
-@Slf4j
+@Setter
+@ToString
 public class Article {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @NotBlank
@@ -48,35 +51,34 @@ public class Article {
     @Column(name = "date_created")
     private Instant dateCreated;
 
-    @Column(name = "last_edit_date")
-    private Instant lastCreated;
+    @Column(name = "last_edited")
+    private Instant lastEdited;
 
     @PositiveOrZero(message = "Article views must be positive OR zero")
     @Column(name = "views")
     private Long views;
 
-    @PositiveOrZero(message = "Article likes must be positive OR zero")
-    @Column(name = "likes")
-    private Long likes;
 
-    @PositiveOrZero(message = "Article dislikes must be positive OR zero")
-    @Column(name = "dislikes")
-    private Long dislikes;
+    @ToString.Exclude
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "articles",  "followers", "following"  }, allowSetters = true)
+    private User author;
 
-    @ManyToOne
-    private User user;
 
     @ManyToMany
     @JoinTable(
-            name = "articles_categories",
+            name = "article_category",
             joinColumns = {@JoinColumn(name = "article_id",referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id",referencedColumnName = "id")}
     )
-    private Set<Category> categories = new HashSet<Category>();
+    private Set<Category> categories = new HashSet<>();
 
-    @OneToMany
-    @JoinColumn(name = "article_id",referencedColumnName = "id")
-    private Set<Comment> comments = new HashSet<Comment>();
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "article")
+    @JsonIgnoreProperties(value = { "user", "article" }, allowSetters = true)
+    private Set<Comment> comments = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

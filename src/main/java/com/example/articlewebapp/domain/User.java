@@ -2,17 +2,18 @@ package com.example.articlewebapp.domain;
 
 import com.example.articlewebapp.domain.enumerations.Gender;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
@@ -20,31 +21,31 @@ import java.util.Set;
 
 /**
  *  @author Mohamed Ehab Ali
- *  @since 24-6-2022
+ *  @since 1.0
  */
 
 @Table(name = "user")
-@Entity(name = "User")
-@Setter
+@Entity
 @Getter
-@Slf4j
+@Setter
+@ToString
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @NotBlank(message = "First Name shouldn't be blank")
     @NotNull
     @Length(max = 50)
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 50)
     private String firstName;
 
 
     @NotBlank(message = "Last Name shouldn't be blank")
     @NotNull
     @Length(max = 50)
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name", length = 50)
     private String lastName;
 
 
@@ -57,6 +58,7 @@ public class User {
 
     @NotBlank(message = "Username shouldn't be blank")
     @NotNull
+    @Size(min = 4, max = 50, message="Username should be at least 4 and at most 50 character")
     @Column(name = "username", unique = true)
     private String username;
 
@@ -64,58 +66,66 @@ public class User {
     @NotNull
     @Length(min = 8)
     @Column(name = "password")
+    @JsonIgnore
+    @ToString.Exclude
     private String password;
 
     @Pattern(message="Mobile Number is not valid",regexp = "^(\\+\\d{1,3}[- ]?)?\\d{10}$")
-    @Column(name = "mobile_no")
+    @Column(name = "mobile")
     private String mobile;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     private Gender gender;
 
     @Column(name = "img_url")
     private String imageUrl;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @NotNull
-    @Column(name = "is_validated")
-    private Boolean isValidated;
+    @Column(nullable = false)
+    private boolean activated = false;
 
-    @Column(name = "validation_key")
-    private String validationKey;
+    @Column(name = "activation_key")
+    @JsonIgnore
+    private String activationKey;
+
 
     @Column(name = "reset_key")
     private String resetKey;
 
-    @OneToMany(mappedBy = "user")
-    @JoinColumn(name = "id", nullable = false)
-    Set<Article> user_articles = new HashSet<Article>();
+    @ToString.Exclude
+    @OneToMany(mappedBy = "author")
+    @JsonIgnoreProperties(value = { "comments", "categories", "author" }, allowSetters = true)
+    private Set<Article> articles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    @JoinColumn(name = "id", nullable = false)
-    Set<Comment> user_comments = new HashSet<Comment>();
-
+    @JsonIgnore
+    @ToString.Exclude
     @ManyToMany
     @JoinTable(
-            name = "users_authorities",
+            name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_name",referencedColumnName = "id")}
+            inverseJoinColumns = {@JoinColumn(name = "authority_name",referencedColumnName = "name")}
     )
     private Set<Authority> authorities = new HashSet<>();
 
-//    @ManyToMany(mappedBy = "following", cascade = CascadeType.ALL)
-//    @JoinTable(name="UserRel",
-//            joinColumns={@JoinColumn(name="ParentId")},
-//            inverseJoinColumns={@JoinColumn(name="UserId")})
-//    private Set<User> followers = new HashSet<User>();
-//
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name="UserRel",
-//            joinColumns={@JoinColumn(name="UserId")},
-//            inverseJoinColumns={@JoinColumn(name="ParentId")})
-//    private Set<User> following = new HashSet<User>();
+    @ToString.Exclude
+    @ManyToMany
+    @JoinTable(
+            name = "user_followers_following",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "followers_id")
+    )
+    @JsonIgnoreProperties(value = { "articles", "followers", "following" }, allowSetters = true)
+    private Set<User> followers = new HashSet<>();
+
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "followers")
+    @JsonIgnoreProperties(value = { "articles", "followers", "following" }, allowSetters = true)
+    private Set<User> following = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

@@ -2,6 +2,7 @@ package com.example.articlewebapp.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 
@@ -14,18 +15,18 @@ import java.util.Set;
 
 /**
  *  @author Mohamed Ehab Ali
- *  @since 24-6-2022
+ *  @since 1.0
  */
 
 @Table(name = "category")
 @Entity(name = "Category")
-@Setter
 @Getter
-@Slf4j
+@Setter
+@ToString
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @NotBlank(message = "Category shouldn't be blank")
@@ -33,8 +34,6 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany
-    private Set<Article> articles = new HashSet<Article>();
 
     @Override
     public boolean equals(Object o) {
