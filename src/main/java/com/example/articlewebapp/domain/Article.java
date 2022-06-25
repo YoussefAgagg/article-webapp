@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -62,11 +63,12 @@ public class Article {
     @ToString.Exclude
     @ManyToOne(optional = false)
     @NotNull
+    @JoinColumn(name = "user_id")
     @JsonIgnoreProperties(value = { "articles",  "followers", "following"  }, allowSetters = true)
     private User author;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "article_category",
             joinColumns = {@JoinColumn(name = "article_id",referencedColumnName = "id")},
@@ -79,6 +81,10 @@ public class Article {
     @OneToMany(mappedBy = "article")
     @JsonIgnoreProperties(value = { "user", "article" }, allowSetters = true)
     private Set<Comment> comments = new HashSet<>();
+    @Formula("(select count(user_id) from article_likes_dislikes likes where likes.article_id = id and likes.like_type=1)")
+    private Long likes;
+    @Formula("(select count(user_id) from article_likes_dislikes likes where likes.article_id = id and likes.like_type=0)")
+    private Long dislikes;
 
     @Override
     public boolean equals(Object o) {

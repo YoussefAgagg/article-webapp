@@ -24,7 +24,7 @@ import java.util.Set;
  *  @since 1.0
  */
 
-@Table(name = "user")
+@Table(name = "`user`")
 @Entity
 @Getter
 @Setter
