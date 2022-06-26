@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="155" author="Youssef Agagg">
+        <loadData
+                file="liquibase/data/user.csv"
+                separator=";"
+                tableName="user"
+                usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="activated" type="boolean"/>
+        </loadData>
+
+        <loadData
+                file="liquibase/data/authority.csv"
+                separator=";"
+                tableName="authority"
+                usePreparedStatements="true">
+            <column name="name" type="string"/>
+        </loadData>
+        <loadData
+                file="liquibase/data/user_authority.csv"
+                separator=";"
+                tableName="user_authority"
+                usePreparedStatements="true">
+            <column name="user_id" type="numeric"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

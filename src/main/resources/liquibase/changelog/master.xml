@@ -18,5 +18,6 @@
     <include file="liquibase/changelog/entity_Article.xml" relativeToChangelogFile="false"/>
     <include file="liquibase/changelog/entity_Comment.xml"  relativeToChangelogFile="false"/>
     <include file="liquibase/changelog/entity_ArticleLikesDislikes.xml"  relativeToChangelogFile="false"/>
+    <include file="liquibase/changelog/load_data.xml"  relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
