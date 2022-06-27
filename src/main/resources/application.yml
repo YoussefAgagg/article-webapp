@@ -10,3 +10,5 @@ spring:
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+jwt:
+  secret: ${JWT_SECRET:332303E674D1A188EC53713577EA83A8AE0207EF8C1DCD975F9BF7ED535D91ACA188EC53713577EA83A8AE0207E674D1A188EC53713577}
