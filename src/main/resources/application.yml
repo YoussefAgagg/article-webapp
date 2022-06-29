@@ -1,4 +1,15 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USER_NAME}
+    password: ${EMAIL_PASSWORD}
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.gmail.com
   liquibase:
     enabled: true
   profiles:
@@ -12,3 +23,7 @@ spring:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
 jwt:
   secret: ${JWT_SECRET:332303E674D1A188EC53713577EA83A8AE0207EF8C1DCD975F9BF7ED535D91ACA188EC53713577EA83A8AE0207E674D1A188EC53713577}
+email:
+  name: ${EMAIL_USER_NAME}
+app:
+  baseUrl: http://127.0.0.1:8080
