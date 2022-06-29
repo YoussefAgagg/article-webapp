@@ -1,5 +1,6 @@
 package com.example.articlewebapp.web.rest;
 
+import com.example.articlewebapp.aop.logging.Loggable;
 import com.example.articlewebapp.security.jwt.JwtFilter;
 import com.example.articlewebapp.security.jwt.TokenProvider;
 import com.example.articlewebapp.web.rest.payload.LoginRequest;
@@ -37,6 +38,7 @@ public class UserJWTController {
 
 
     @PostMapping("/authenticate")
+    @Loggable
     public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
             loginRequest.getUsername(),

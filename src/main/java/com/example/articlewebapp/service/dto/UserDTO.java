@@ -1,5 +1,6 @@
 package com.example.articlewebapp.service.dto;
 
+import com.example.articlewebapp.domain.Authority;
 import com.example.articlewebapp.domain.enumerations.Gender;
 import lombok.Data;
 import lombok.ToString;
@@ -31,6 +32,7 @@ public class UserDTO {
     private String username;
     @NotBlank(message = "Password shouldn't be blank")
     @NotNull
+    @Size(min = 4, max = 50)
     private String password;
 
     private String mobile;

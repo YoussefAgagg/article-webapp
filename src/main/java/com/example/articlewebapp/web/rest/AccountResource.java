@@ -1,5 +1,7 @@
 package com.example.articlewebapp.web.rest;
 
+import com.example.articlewebapp.aop.logging.Loggable;
+import com.example.articlewebapp.domain.User;
 import com.example.articlewebapp.exception.EmailAlreadyUsedException;
 import com.example.articlewebapp.exception.InvalidPasswordException;
 import com.example.articlewebapp.exception.UsernameAlreadyUsedException;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.Optional;
 
 /**
  * REST controller for managing the current user's account.
@@ -24,7 +27,12 @@ import javax.validation.Valid;
 @Slf4j
 @RequiredArgsConstructor
 public class AccountResource {
+    private static class AccountResourceException extends RuntimeException {
 
+        private AccountResourceException(String message) {
+            super(message);
+        }
+    }
 
     private final UserService userService;
 
@@ -35,15 +43,16 @@ public class AccountResource {
      * {@code POST  /register} : register the user.
      *
      * @param userDTO the managed user View Model.
-     * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws UsernameAlreadyUsedException {@code 400 (Bad Request)} if the username is already used.
      */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
+    @Loggable
     public void registerAccount(@Valid @RequestBody UserDTO userDTO) {
-       // TODO implement registration of new user
-        log.debug("register new user {}",userDTO);
+        User user = userService.registerUser(userDTO);
+        mailService.sendActivationEmail(user);
+
     }
 
     /**
@@ -53,20 +62,23 @@ public class AccountResource {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be activated.
      */
     @GetMapping("/activate")
+    @Loggable
     public void activateAccount(@RequestParam(value = "key") String key) {
-        // TODO: implement activation  of new user
+        Optional<User> user = userService.activateRegistration(key);
+        if (!user.isPresent()) {
+            throw new AccountResourceException("No user was found for this activation key");
+        }
     }
 
     /**
      * {@code POST  /account/change-password} : changes the current user's password.
      *
      * @param passwordChange current and new password.
-     * @throws InvalidPasswordException {@code 400 (Bad Request)} if the new password is incorrect.
      */
     @PostMapping(path = "/account/change-password")
-    public void changePassword(@RequestBody PasswordChange passwordChange) {
-        // TODO: implement changing user password
-        log.debug("changed password {}",passwordChange);
+    @Loggable
+    public void changePassword(@RequestBody @Valid PasswordChange passwordChange) {
+        userService.changePassword(passwordChange.getCurrentPassword(), passwordChange.getNewPassword());
     }
 
     /**
@@ -74,21 +86,30 @@ public class AccountResource {
      *
      * @param mail the mail of the user.
      */
+    @Loggable
     @PostMapping(path = "/account/reset-password/init")
     public void requestPasswordReset(@RequestBody String mail) {
-        // TODO: implement password reset
+        Optional<User> user = userService.requestPasswordReset(mail);
+        if (user.isPresent()) {
+            mailService.sendPasswordResetMail(user.get());
+        } else {
+            log.warn("Password reset requested for non existing mail");
+        }
     }
 
     /**
      * {@code POST   /account/reset-password/finish} : Finish to reset the password of the user.
      *
      * @param keyAndPassword the generated key and the new password.
-     * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the password could not be reset.
      */
     @PostMapping(path = "/account/reset-password/finish")
-    public void finishPasswordReset(@RequestBody KeyAndPasswordRequest keyAndPassword) {
-        // TODO: implement password reset
+    @Loggable
+    public void finishPasswordReset(@Valid @RequestBody KeyAndPasswordRequest keyAndPassword) {
+        Optional<User> user = userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
+        if (!user.isPresent()) {
+            throw new AccountResourceException("No user was found for this reset key");
+        }
     }
 
 }

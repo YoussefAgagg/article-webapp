@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         log.debug("Authenticating {}", username);
 
         if (!(Objects.isNull(username)||username.isBlank())) {
-            var storedUser =userRepository.findUserByUsername(username);
+            var storedUser =userRepository.findOneByUsername(username);
            return storedUser.map(user -> createSpringSecurityUser( user))
                     .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " was not found in the database"));
         }
