@@ -1,4 +1,4 @@
-package com.developersboard.annotation;
+package com.example.articlewebapp.aop.logging;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,9 +10,7 @@ import java.lang.annotation.Target;
  * aspect will run around that method execution and log the entry-exit and time taken by that
  * method.
  *
- * @author Eric Opoku
- * @version 1.0
- * @since 1.0
+ * @author Youssef Agagg
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
