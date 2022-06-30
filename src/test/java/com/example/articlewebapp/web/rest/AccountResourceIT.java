@@ -6,7 +6,6 @@ import com.example.articlewebapp.repository.UserRepository;
 import com.example.articlewebapp.security.AuthoritiesConstants;
 import com.example.articlewebapp.service.UserService;
 import com.example.articlewebapp.service.dto.AuthorityDTO;
-import com.example.articlewebapp.service.dto.UserDTO;
 
 import com.example.articlewebapp.web.rest.payload.KeyAndPasswordRequest;
 import com.example.articlewebapp.web.rest.payload.PasswordChange;
@@ -56,7 +55,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     void testRegisterValid() throws Exception {
-        UserDTO validUser = new UserDTO();
+        UserDTOTest validUser = new UserDTOTest();
         validUser.setUsername("test-register-valid");
         validUser.setPassword("password");
         validUser.setFirstName("Alice");
@@ -78,7 +77,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     void testRegisterInvalidUsername() throws Exception {
-        UserDTO invalidUser = new UserDTO();
+        UserDTOTest invalidUser = new UserDTOTest();
         invalidUser.setUsername("gfd"); // <-- invalid
         invalidUser.setPassword("password");
         invalidUser.setFirstName("Funky");
@@ -100,7 +99,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     void testRegisterInvalidEmail() throws Exception {
-        UserDTO invalidUser = new UserDTO();
+        UserDTOTest invalidUser = new UserDTOTest();
         invalidUser.setUsername("bob1");
         invalidUser.setPassword("password");
         invalidUser.setFirstName("Bob");
@@ -122,7 +121,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     void testRegisterInvalidPassword() throws Exception {
-        UserDTO invalidUser = new UserDTO();
+        UserDTOTest invalidUser = new UserDTOTest();
         invalidUser.setUsername("bob1");
         invalidUser.setPassword("123"); // password with only 3 digits
         invalidUser.setFirstName("Bob");
@@ -143,7 +142,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     void testRegisterNullPassword() throws Exception {
-        UserDTO invalidUser = new UserDTO();
+        UserDTOTest invalidUser = new UserDTOTest();
         invalidUser.setUsername("bob1");
         invalidUser.setPassword(null); // invalid null password
         invalidUser.setFirstName("Bob");
@@ -166,7 +165,7 @@ class AccountResourceIT {
     @Transactional
     void testRegisterDuplicateUsername() throws Exception {
         // First registration
-        UserDTO firstUser = new UserDTO();
+        UserDTOTest firstUser = new UserDTOTest();
         firstUser.setUsername("alice");
         firstUser.setPassword("password");
         firstUser.setFirstName("Alice");
@@ -179,7 +178,7 @@ class AccountResourceIT {
         firstUser.setAuthorities(Collections.singleton(authority));
 
         // Duplicate username, different email
-        UserDTO secondUser = new UserDTO();
+        UserDTOTest secondUser = new UserDTOTest();
         secondUser.setUsername(firstUser.getUsername());
         secondUser.setPassword(firstUser.getPassword());
         secondUser.setFirstName(firstUser.getFirstName());
@@ -206,7 +205,7 @@ class AccountResourceIT {
     @Transactional
     void testRegisterDuplicateEmail() throws Exception {
         // First user
-        UserDTO firstUser = new UserDTO();
+        UserDTOTest firstUser = new UserDTOTest();
         firstUser.setUsername("test-register-duplicate-email");
         firstUser.setPassword("password");
         firstUser.setFirstName("Alice");
@@ -227,7 +226,7 @@ class AccountResourceIT {
         assertThat(testUser1).isPresent();
 
         // Duplicate email, different username
-        UserDTO secondUser = new UserDTO();
+        UserDTOTest secondUser = new UserDTOTest();
         secondUser.setUsername("test-register-duplicate-email-2");
         secondUser.setPassword(firstUser.getPassword());
         secondUser.setFirstName(firstUser.getFirstName());
@@ -248,7 +247,7 @@ class AccountResourceIT {
         assertThat(testUser3).isEmpty();
 
         // Duplicate email - with uppercase email address
-        UserDTO userWithUpperCaseEmail = new UserDTO();
+        UserDTOTest userWithUpperCaseEmail = new UserDTOTest();
         userWithUpperCaseEmail.setId(firstUser.getId());
         userWithUpperCaseEmail.setUsername("test-register-duplicate-email-3");
         userWithUpperCaseEmail.setPassword(firstUser.getPassword());
@@ -275,7 +274,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     void testRegisterAdminIsIgnored() throws Exception {
-        UserDTO validUser = new UserDTO();
+        UserDTOTest validUser = new UserDTOTest();
         validUser.setUsername("badguy");
         validUser.setPassword("password");
         validUser.setFirstName("Bad");
