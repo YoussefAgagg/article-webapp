@@ -44,7 +44,10 @@ An API for simple article management system where users can write articles of in
           }
           ```
 - other end points:
+    - http://localhost:8080/api/users/{username}
     - http://localhost:8080/api/users
     - http://localhost:8080/api/articles
+    - http://localhost:8080/api/articles/{article_id}
     - http://localhost:8080/api/{article_id}/comments
+    - http://localhost:8080/api/{article_id}/comments/{comment_id}
 * The `get` endpoints are not secured and are open to all users.
