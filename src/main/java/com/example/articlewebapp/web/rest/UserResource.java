@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing {@link com.example.articlewebapp.domain.User}
+ * REST controller for managing {@link User}
  *
  * @author Youssef Agagg.
  */

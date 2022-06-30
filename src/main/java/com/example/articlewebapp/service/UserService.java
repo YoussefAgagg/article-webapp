@@ -1,6 +1,7 @@
 package com.example.articlewebapp.service;
 
 import com.example.articlewebapp.aop.logging.Loggable;
+import com.example.articlewebapp.domain.Article;
 import com.example.articlewebapp.domain.Authority;
 import com.example.articlewebapp.domain.User;
 import com.example.articlewebapp.exception.EmailAlreadyUsedException;
@@ -21,12 +22,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.DoubleStream;
 
+/**
+ * Service Implementation for managing {@link User}.
+ *
+ * @author Youssef Agagg
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
