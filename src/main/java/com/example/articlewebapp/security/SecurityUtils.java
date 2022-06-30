@@ -53,15 +53,6 @@ public final class SecurityUtils {
         );
     }
 
-    /**
-     * Checks if the current user has none of the authorities.
-     *
-     * @param authorities the authorities to check.
-     * @return true if the current user has none of the authorities, false otherwise.
-     */
-    public static boolean hasCurrentUserNoneOfAuthorities(String... authorities) {
-        return !hasCurrentUserAnyOfAuthorities(authorities);
-    }
 
     /**
      * Checks if the current user has a specific authority.

@@ -9,6 +9,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+/**
+ * Model object representing a User data that will be updated.
+ *
+ * @author Youssef Agagg
+ */
 @Data
 public class UpdateUserData {
     @NotNull
