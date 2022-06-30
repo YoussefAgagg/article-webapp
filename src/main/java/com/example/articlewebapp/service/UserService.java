@@ -13,8 +13,11 @@ import com.example.articlewebapp.security.SecurityUtils;
 import com.example.articlewebapp.service.dto.AuthorityDTO;
 import com.example.articlewebapp.service.dto.UserDTO;
 import com.example.articlewebapp.service.dto.mapper.UserMapper;
+import com.example.articlewebapp.web.rest.payload.UpdateUserData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.DoubleStream;
 
 @Service
 @Slf4j
@@ -106,5 +110,45 @@ public class UserService {
                     user.setResetKey(null);
                     return user;
                 });
+    }
+    @Loggable
+    public Optional<UserDTO> updateUser(UpdateUserData userData) {
+        return Optional
+                .of(userRepository.findById(userData.getId()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(user -> {
+                    user.setFirstName(userData.getFirstName());
+                    user.setLastName(userData.getLastName());
+                    user.setEmail(userData.getEmail().toLowerCase());
+                    user.setGender(userData.getGender());
+                    user.setDateOfBirth(userData.getDateOfBirth());
+                    user.setMobile(userData.getMobile());
+                    log.debug("Changed Information for User: {}", user);
+                    return user;
+                })
+                .map(userMapper::toDto);
+    }
+    @Transactional(readOnly = true)
+    @Loggable
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(userMapper::toDto);
+    }
+    @Loggable
+    public Optional<UserDTO> getUserByUsername(String username) {
+        return userRepository.findOneByUsername(username.toLowerCase()).map(userMapper::toDto);
+    }
+    @Loggable
+    public void deleteUser(String username) {
+        userRepository
+                .findOneByUsername(username.toLowerCase())
+                .ifPresent(user -> {
+                    userRepository.delete(user);
+                    log.debug("Deleted User: {}", user);
+                });
+    }
+
+    public Optional<UserDTO> getUserById(Long id) {
+        return userRepository.findById(id).map(userMapper::toDto);
     }
 }
