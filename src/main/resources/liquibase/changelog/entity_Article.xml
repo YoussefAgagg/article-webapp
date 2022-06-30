@@ -20,7 +20,7 @@
             <column name="content" type="${clobType}">
                 <constraints nullable="true" />
             </column>
-            <column name="views" type="bigint">
+            <column name="views" type="bigint" defaultValue="0">
                 <constraints nullable="true" />
             </column>
 

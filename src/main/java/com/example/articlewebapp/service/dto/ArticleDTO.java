@@ -22,7 +22,7 @@ public class ArticleDTO implements Serializable {
     @NotBlank(message = "Article content shouldn't be blank")
     @NotNull(message = "Article must have a content")
     private String content;
-    @NotNull(message = "Article must have a creation date")
+
     private Instant dateCreated;
 
     private Instant lastEdited;
