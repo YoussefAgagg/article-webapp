@@ -2,8 +2,9 @@ package com.example.articlewebapp.service.dto;
 
 import com.example.articlewebapp.domain.Authority;
 import com.example.articlewebapp.domain.enumerations.Gender;
-import lombok.Data;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
 @Data
 public class UserDTO {
 
@@ -33,6 +35,7 @@ public class UserDTO {
     @NotBlank(message = "Password shouldn't be blank")
     @NotNull
     @Size(min = 4, max = 50)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String mobile;
@@ -60,4 +63,5 @@ public class UserDTO {
 
     @ToString.Exclude
     private Set<UserDTO> following = new HashSet<>();
+
 }
