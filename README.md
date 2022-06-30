@@ -23,7 +23,8 @@ An API for simple article management system where users can write articles of in
 - Email Service with HTML and attachment support
 - Unit and Integration Tests
 ## Entity Relational Diagram (ERD
-![](../../new projects/digrame.png)
+![digrame](https://user-images.githubusercontent.com/62031222/176775755-2f8945c2-5b75-4b45-af61-b5ccf8a0c49e.png)
+
 * The following environment variables can be customized.:
 
   - The defaults are:
