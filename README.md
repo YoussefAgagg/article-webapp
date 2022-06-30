@@ -1,7 +1,5 @@
 # article-webapp
-Production ready maven based Spring Boot starter kit application with example cases of handling transactions with Spring.
 
-## Description
 An API for simple article management system where users can write articles of interest to them. registered users can write, edit, and delete content.
 
 ## Technology
@@ -35,7 +33,7 @@ An API for simple article management system where users can write articles of in
           JWT_SECRET=salt
           SPRING_PROFILES_ACTIVE=dev
 
-## api use
+## URLs:
 - to login use:
     - http://localhost:8080/api/authenticate
         - with request body:
