@@ -38,13 +38,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ArticleResourceIT {
 
-    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
+    static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_SUMMERY = "AAAAAAAAAA";
+    static final String DEFAULT_SUMMERY = "AAAAAAAAAA";
     private static final String UPDATED_SUMMERY = "BBBBBBBBBB";
 
-    private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
+    static final String DEFAULT_CONTENT = "AAAAAAAAAA";
     private static final String UPDATED_CONTENT = "BBBBBBBBBB";
 
 
