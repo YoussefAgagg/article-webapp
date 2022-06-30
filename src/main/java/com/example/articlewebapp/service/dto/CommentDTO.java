@@ -30,7 +30,7 @@ public class CommentDTO implements Serializable {
     @NotNull(message = "Comment shouldn't be null")
     @Size(min = 1, max = 500, message="Comment should be at least 1 and at most 500 characters")
     private String text;
-    @NotNull
+
     private Instant dateCreated;
 
     private Instant lastEdited;

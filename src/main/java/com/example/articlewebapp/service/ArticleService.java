@@ -73,6 +73,7 @@ public class ArticleService {
         return articleRepository.findAll(pageable).map(articleMapper::toDto);
     }
 
+    @Loggable
     public Optional<ArticleDTO> update(ArticleDTO articleDTO) {
         return articleRepository
                 .findById(articleDTO.getId())
