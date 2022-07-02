@@ -87,11 +87,6 @@ public class MailService {
         sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title");
     }
 
-    @Async
-    public void sendCreationEmail(User user) {
-        log.debug("Sending creation email to '{}'", user.getEmail());
-        sendEmailFromTemplate(user, "mail/creationEmail", "email.activation.title");
-    }
 
     @Async
     public void sendPasswordResetMail(User user) {
