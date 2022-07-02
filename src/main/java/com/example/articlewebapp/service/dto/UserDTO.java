@@ -52,16 +52,10 @@ public class UserDTO {
 
     private String resetKey;
 
-    @ToString.Exclude
-    private Set<ArticleDTO> articles = new HashSet<>();
 
     @ToString.Exclude
     private Set<AuthorityDTO> authorities = new HashSet<>();
 
-    @ToString.Exclude
-    private Set<UserDTO> followers = new HashSet<>();
 
-    @ToString.Exclude
-    private Set<UserDTO> following = new HashSet<>();
 
 }

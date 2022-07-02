@@ -13,14 +13,5 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper extends EntityMapper<UserDTO, User>{
-    @Override
-    @Mapping(target = "following", ignore = true)
-    @Mapping(target = "followers", ignore = true)
-    @Mapping(target = "articles", ignore = true)
-    UserDTO toDto(User entity);
-    @Mapping(target = "following", ignore = true)
-    @Mapping(target = "followers", ignore = true)
-    @Mapping(target = "articles", ignore = true)
-    @Override
-    User toEntity(UserDTO dto);
+
 }
