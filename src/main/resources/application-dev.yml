@@ -9,6 +9,7 @@ spring:
     password:
     driver-class-name: org.h2.Driver
   liquibase:
+    enabled: true
     change-log: liquibase/changelog/master.xml
   jpa:
     hibernate:
