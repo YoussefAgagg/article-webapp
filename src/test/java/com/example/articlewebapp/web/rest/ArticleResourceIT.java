@@ -2,11 +2,14 @@ package com.example.articlewebapp.web.rest;
 
 
 import com.example.articlewebapp.domain.Article;
+import com.example.articlewebapp.domain.ArticleLikesDisLikes;
 import com.example.articlewebapp.domain.User;
+import com.example.articlewebapp.repository.ArticleLikesDislikesRepository;
 import com.example.articlewebapp.repository.ArticleRepository;
 import com.example.articlewebapp.repository.UserRepository;
 import com.example.articlewebapp.service.dto.ArticleDTO;
 import com.example.articlewebapp.service.dto.mapper.ArticleMapper;
+import com.example.articlewebapp.web.rest.payload.LikeRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+
 class ArticleResourceIT {
 
     static final String DEFAULT_TITLE = "AAAAAAAAAA";
@@ -58,6 +62,8 @@ class ArticleResourceIT {
     private ArticleRepository articleRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ArticleLikesDislikesRepository articleLikesDislikesRepository;
 
     @Autowired
     private ArticleMapper articleMapper;
@@ -313,5 +319,77 @@ class ArticleResourceIT {
 
         List<Article> articleList = articleRepository.findAll();
         assertThat(articleList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+    @Test
+    @Transactional
+    @WithMockUser(username= "testUser",authorities ={"ROLE_USER"})
+    void likeArticle() throws Exception {
+        User user2 = new User();
+        user2.setUsername("testUser");
+        user2.setPassword("jskdjsi");
+        user2.setActivated(true);
+        user2.setEmail("ay@localhost.com");
+        user2.setFirstName("firstnam");
+        user2.setLastName("last");
+        userRepository.saveAndFlush(user2);
+        article.setDateCreated(Instant.now());
+        articleRepository.saveAndFlush(article);
+
+        LikeRequest likeRequest=new LikeRequest();
+        likeRequest.setArticleId(article.getId());
+        likeRequest.setLikeType(1);
+        long before=articleLikesDislikesRepository.count();
+
+        restArticleMockMvc
+                .perform(
+                        post(ENTITY_API_URL+"/like")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(TestUtil.convertObjectToJsonBytes(likeRequest)))
+                .andExpect(status().isNoContent());
+        assertThat(articleLikesDislikesRepository.count()).isEqualTo(before+1)
+        ;
+        em.clear();
+        Article article2=articleRepository.findById(article.getId()).get();
+
+        assertThat(article2.getLikes()).isEqualTo(1L);
+
+    }
+    @Test
+    @Transactional
+    @WithMockUser(username= "testUser",authorities ={"ROLE_USER"})
+    void removeLikeFromArticle() throws Exception {
+        User user2 = new User();
+        user2.setUsername("testUser");
+        user2.setPassword("jskdjsi");
+        user2.setActivated(true);
+        user2.setEmail("ay@localhost.com");
+        user2.setFirstName("firstnam");
+        user2.setLastName("last");
+        userRepository.saveAndFlush(user2);
+        article.setDateCreated(Instant.now());
+        articleRepository.saveAndFlush(article);
+        ArticleLikesDisLikes.ArticleLikesDislikesId id =new ArticleLikesDisLikes.ArticleLikesDislikesId(user2, article);
+        ArticleLikesDisLikes likes=new ArticleLikesDisLikes();
+        likes.setId(id);
+        likes.setLikeType(1);
+        articleLikesDislikesRepository.saveAndFlush(likes);
+
+        long before=articleLikesDislikesRepository.count();
+
+        restArticleMockMvc
+                .perform(
+                        post(ENTITY_API_URL+"/likeRemove")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(TestUtil.convertObjectToJsonBytes(article.getId())))
+                .andExpect(status().isNoContent());
+        assertThat(articleLikesDislikesRepository.count()).isEqualTo(before-1)
+        ;
+        em.clear();
+        Article article2=articleRepository.findById(article.getId()).get();
+
+        assertThat(article2.getLikes()).isEqualTo(0L);
+
     }
 }
