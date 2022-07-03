@@ -100,4 +100,39 @@ public class UserResource {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/users/follow")
+    @Loggable
+    public ResponseEntity<Void> followUser(@RequestBody Long followingId) {
+        log.debug("REST request to follow User : {}", followingId);
+        userService.followUser(followingId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/users/unfollow")
+    @Loggable
+    public ResponseEntity<Void> unfollowUser(@RequestBody Long followingId) {
+        log.debug("REST request to unfollow User : {}", followingId);
+        userService.unfollowUser(followingId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/users/{username}/followers")
+    @Loggable
+    public ResponseEntity<List<UserDTO>> getUserFollowers(@PathVariable String username,
+                                                          @PageableDefault(sort = { "id" })Pageable pageable) {
+        log.debug("REST request to get User followers : {}", username);
+        final Page<UserDTO> page= userService.getUserFollowers(username, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+    @GetMapping("/users/{username}/following")
+    @Loggable
+    public ResponseEntity<List<UserDTO>> getUserFollowing(@PathVariable String username,
+                                                          @PageableDefault(sort = { "id" })Pageable pageable) {
+        log.debug("REST request to get User following : {}", username);
+        final Page<UserDTO> page= userService.getUserFollowing(username, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
 }

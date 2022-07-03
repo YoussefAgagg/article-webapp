@@ -47,13 +47,12 @@ public class UserDTO {
     private LocalDate dateOfBirth;
 
     private boolean activated = false;
-
+    @JsonIgnore
     private String activationKey;
-
+    @JsonIgnore
     private String resetKey;
 
 
-    @ToString.Exclude
     private Set<AuthorityDTO> authorities = new HashSet<>();
 
 

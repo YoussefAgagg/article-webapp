@@ -1,13 +1,13 @@
 package com.example.articlewebapp.service;
 
 import com.example.articlewebapp.aop.logging.Loggable;
-import com.example.articlewebapp.domain.Article;
-import com.example.articlewebapp.domain.Authority;
 import com.example.articlewebapp.domain.User;
+import com.example.articlewebapp.domain.UserFollowersFollowing;
+import com.example.articlewebapp.exception.BadRequestException;
 import com.example.articlewebapp.exception.EmailAlreadyUsedException;
 import com.example.articlewebapp.exception.InvalidPasswordException;
 import com.example.articlewebapp.exception.UsernameAlreadyUsedException;
-import com.example.articlewebapp.repository.AuthorityRepository;
+import com.example.articlewebapp.repository.UserFollowersFollowingRepository;
 import com.example.articlewebapp.repository.UserRepository;
 import com.example.articlewebapp.security.AuthoritiesConstants;
 import com.example.articlewebapp.security.SecurityUtils;
@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,11 +33,12 @@ import java.util.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthorityRepository authorityRepository;
     private final UserMapper userMapper;
+    private final UserFollowersFollowingRepository  userFollowersFollowingRepository;
     @Loggable
     public User registerUser(UserDTO userDTO) {
         userRepository
@@ -152,5 +154,55 @@ public class UserService {
 
     public Optional<UserDTO> getUserById(Long id) {
         return userRepository.findById(id).map(userMapper::toDto);
+    }
+
+    @Loggable
+    public void followUser(Long followingId) {
+        User userLogin = getLoginUser();
+        if (Objects.equals(userLogin.getId(),followingId)){
+            throw new BadRequestException("user try to follow himself");
+        }
+
+        UserFollowersFollowing userFollowersFollowing=getUserToFollow(followingId, userLogin);
+        userFollowersFollowingRepository.save(userFollowersFollowing);
+    }
+
+    private UserFollowersFollowing getUserToFollow(Long followingId, User userLogin) {
+        User toFollow=userRepository.findById(followingId)
+                .orElseThrow(()->{throw new BadRequestException("the user doesn't exist");});
+
+        UserFollowersFollowing.UserFollowersFollowingID id=new UserFollowersFollowing.UserFollowersFollowingID();
+        id.setUser(toFollow);
+        id.setFollowerId(userLogin);
+        UserFollowersFollowing userFollowersFollowing=new UserFollowersFollowing();
+        userFollowersFollowing.setId(id);
+        return userFollowersFollowing;
+    }
+
+    @Loggable
+    public Page<UserDTO> getUserFollowers(String username, Pageable pageable) {
+        return userRepository.findAllByFollowingUsername(username, pageable)
+                .map(userMapper::toDto);
+
+    }
+
+    public Page<UserDTO> getUserFollowing(String username, Pageable pageable) {
+        return userRepository.findAllByFollowersUsername(username, pageable)
+                .map(userMapper::toDto);
+    }
+
+    public void unfollowUser(Long followingId) {
+        User userLogin = getLoginUser();
+        if (Objects.equals(userLogin.getId(),followingId)){
+            throw new BadRequestException("user try ro unfollow himself");
+        }
+        userFollowersFollowingRepository.delete(getUserToFollow(followingId, userLogin));
+    }
+
+    private User getLoginUser() {
+        return SecurityUtils
+                .getCurrentUserUsername()
+                .flatMap(userRepository::findOneByUsername)
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("Current user login not found"));
     }
 }
