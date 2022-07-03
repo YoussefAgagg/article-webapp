@@ -9,6 +9,7 @@ import com.example.articlewebapp.service.ArticleService;
 import com.example.articlewebapp.service.UserService;
 import com.example.articlewebapp.service.dto.ArticleDTO;
 
+import com.example.articlewebapp.web.rest.payload.LikeRequest;
 import com.example.articlewebapp.web.rest.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -134,5 +135,19 @@ public class ArticleResource {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+    @PostMapping("/articles/like")
+    @Loggable
+    public ResponseEntity<Void> likeArticle(@RequestBody LikeRequest likeRequest) {
+        log.debug("REST request to like or dislike an article : {}", likeRequest);
+        articleService.likeArticle(likeRequest);
+        return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/articles/likeRemove")
+    @Loggable
+    public ResponseEntity<Void> removeLike(@RequestBody Long articleId) {
+        log.debug("REST request to remove like or dislike from an article : {}", articleId);
+        articleService.removeLikeArticle(articleId);
+        return ResponseEntity.noContent().build();
     }
 }

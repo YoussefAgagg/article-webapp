@@ -1,15 +1,21 @@
 package com.example.articlewebapp.service;
 
 import com.example.articlewebapp.aop.logging.Loggable;
-import com.example.articlewebapp.domain.Article;
+import com.example.articlewebapp.domain.*;
+import com.example.articlewebapp.exception.BadRequestException;
+import com.example.articlewebapp.repository.ArticleLikesDislikesRepository;
 import com.example.articlewebapp.repository.ArticleRepository;
+import com.example.articlewebapp.repository.UserRepository;
+import com.example.articlewebapp.security.SecurityUtils;
 import com.example.articlewebapp.service.dto.ArticleDTO;
 import com.example.articlewebapp.service.dto.mapper.ArticleMapper;
 
+import com.example.articlewebapp.web.rest.payload.LikeRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +35,10 @@ public class ArticleService {
 
 
     private final ArticleRepository articleRepository;
+
+    private final ArticleLikesDislikesRepository articleLikesDislikesRepository;
+
+    private final UserRepository userRepository;
 
     private final ArticleMapper articleMapper;
 
@@ -85,5 +95,37 @@ public class ArticleService {
                 })
                 .map(articleRepository::save)
                 .map(articleMapper::toDto);
+    }
+    @Loggable
+    public void likeArticle(LikeRequest likeRequest) {
+        User userLogin = getLoginUser();
+        Article article=articleRepository.findById(likeRequest.getArticleId())
+                .orElseThrow(()->new BadRequestException("article not found"));
+
+        ArticleLikesDisLikes.ArticleLikesDislikesId id =new ArticleLikesDisLikes.ArticleLikesDislikesId(userLogin, article);
+        ArticleLikesDisLikes likes=new ArticleLikesDisLikes();
+        likes.setId(id);
+        likes.setLikeType(likeRequest.getLikeType());
+        articleLikesDislikesRepository.save(likes);
+
+    }
+    @Loggable
+    public void removeLikeArticle(Long articleId) {
+        User userLogin = getLoginUser();
+        Article article=articleRepository.findById(articleId)
+                .orElseThrow(()->new BadRequestException("article not found"));
+
+        ArticleLikesDisLikes.ArticleLikesDislikesId id =new ArticleLikesDisLikes.ArticleLikesDislikesId(userLogin, article);
+        ArticleLikesDisLikes likes=new ArticleLikesDisLikes();
+        likes.setId(id);
+        articleLikesDislikesRepository.delete(likes);
+
+    }
+
+    private User getLoginUser() {
+        return SecurityUtils
+                .getCurrentUserUsername()
+                .flatMap(userRepository::findOneByUsername)
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("Current user login not found"));
     }
 }

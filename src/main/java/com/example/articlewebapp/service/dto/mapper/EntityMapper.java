@@ -7,6 +7,7 @@ import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Contract for a generic dto to entity mapper.
@@ -25,6 +26,8 @@ public interface EntityMapper<D, E> {
     List<E> toEntities(List<D> dtoList);
 
     List<D> toDTOs(List<E> entityList);
+
+    Set<D> toDTOSet(Set<E> entitySet);
     @Named("partialUpdate")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void partialUpdate(@MappingTarget E entity, D dto);
