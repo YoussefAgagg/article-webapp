@@ -29,12 +29,14 @@
                                  baseTableName="article_likes_dislikes"
                                  constraintName="fk_article_likes_dislikes_user_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="user"/>
+                                 referencedTableName="user"
+                                 onDelete="CASCADE"/>
 
         <addForeignKeyConstraint baseColumnNames="article_id"
                                  baseTableName="article_likes_dislikes"
                                  constraintName="fk_article_likes_dislikes_article_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="article"/>
+                                 referencedTableName="article"
+                                 onDelete="CASCADE"/>
     </changeSet>
 </databaseChangeLog>

@@ -74,7 +74,8 @@
                                  baseTableName="user_authority"
                                  constraintName="fk_user_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="user"/>
+                                 referencedTableName="user"
+                                 onDelete="CASCADE"/>
 
         <addNotNullConstraint   columnName="password"
                                 columnDataType="varchar()"
@@ -97,13 +98,15 @@
                                  baseTableName="user_followers_following"
                                  constraintName="fk_user_followers_user_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="user"/>
+                                 referencedTableName="user"
+                                 onDelete="CASCADE"/>
 
         <addForeignKeyConstraint baseColumnNames="followers_id"
                                  baseTableName="user_followers_following"
                                  constraintName="fk_user_followers_follower_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="user"/>
+                                 referencedTableName="user"
+        onDelete="CASCADE"/>
     </changeSet>
 
 

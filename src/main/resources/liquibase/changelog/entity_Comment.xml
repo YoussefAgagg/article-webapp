@@ -38,12 +38,14 @@
                                  baseTableName="comment"
                                  constraintName="fk_comment_user_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="user"/>
+                                 referencedTableName="user"
+                                 onDelete="CASCADE"/>
 
         <addForeignKeyConstraint baseColumnNames="article_id"
                                  baseTableName="comment"
                                  constraintName="fk_comment_article_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="article"/>
+                                 referencedTableName="article"
+                                 onDelete="CASCADE"/>
     </changeSet>
 </databaseChangeLog>
