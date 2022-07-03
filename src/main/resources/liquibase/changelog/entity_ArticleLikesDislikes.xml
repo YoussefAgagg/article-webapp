@@ -23,6 +23,7 @@
         </createTable>
     </changeSet>
     <changeSet id="1000001" author="youssef agagg">
+        <addPrimaryKey columnNames="user_id, article_id" tableName="article_likes_dislikes"/>
 
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="article_likes_dislikes"
