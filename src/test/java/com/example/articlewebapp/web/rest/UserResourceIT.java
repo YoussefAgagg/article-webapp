@@ -1,11 +1,9 @@
 package com.example.articlewebapp.web.rest;
 
 import com.example.articlewebapp.domain.User;
+import com.example.articlewebapp.repository.UserFollowersFollowingRepository;
 import com.example.articlewebapp.repository.UserRepository;
-import com.example.articlewebapp.security.AuthoritiesConstants;
-import com.example.articlewebapp.service.dto.mapper.UserMapper;
 import com.example.articlewebapp.web.rest.payload.UpdateUserData;
-import liquibase.repackaged.net.sf.jsqlparser.util.validation.metadata.NamedObject;
 import liquibase.repackaged.org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,18 +16,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static com.example.articlewebapp.web.rest.UserResourceIT.DEFAULT_USERNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  * Integration tests for the {@link UserResource} REST controller.
@@ -51,10 +46,13 @@ class UserResourceIT {
     static final String DEFAULT_LASTNAME = "mohamed";
     private static final String UPDATED_LASTNAME = "agagg";
 
-
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserFollowersFollowingRepository userFollowersFollowingRepository;
 
 
     @Autowired
@@ -229,6 +227,167 @@ class UserResourceIT {
             .andExpect(status().isNoContent());
 
         assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeDelete - 1));
+    }
+    @Test
+    //@Disabled
+    @Transactional
+    @WithMockUser(username= DEFAULT_USERNAME,authorities ={"ROLE_USER"})
+    void followUser() throws Exception {
+        User user2 = new User();
+        user2.setUsername("tesgt");
+        user2.setPassword("jskdjsi");
+        user2.setActivated(true);
+        user2.setEmail("ay@localhost.com");
+        user2.setFirstName("firstnam");
+        user2.setLastName("last");
+        userRepository.saveAndFlush(user);
+        userRepository.saveAndFlush(user2);
+        long before=userFollowersFollowingRepository.count();
+
+        restUserMockMvc
+                .perform(
+                        post("/api/users/follow")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(TestUtil.convertObjectToJsonBytes(user2.getId())))
+                .andExpect(status().isNoContent());
+        em.detach(user);
+        em.detach(user2);
+        assertThat(userFollowersFollowingRepository.count()).isEqualTo(before+1);
+
+        Set<User>following=userRepository.findById(user.getId()).get().getFollowing();
+
+        assertThat(following).isNotEmpty();
+        assertThat(following).hasSize(1);
+
+
+    }
+    @Test
+    @Transactional
+    @WithMockUser(username= DEFAULT_USERNAME,authorities ={"ROLE_USER"})
+    void followUserWithWrongId() throws Exception {
+
+        userRepository.saveAndFlush(user);
+
+        restUserMockMvc
+                .perform(
+                        post("/api/users/follow")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(TestUtil.convertObjectToJsonBytes(333333l)))
+                .andExpect(status().isBadRequest());
+
+
+
+    }
+    @Test
+    @Transactional
+    @WithMockUser(username= DEFAULT_USERNAME,authorities ={"ROLE_USER"})
+    void userTryToFollowHimself() throws Exception {
+
+        userRepository.saveAndFlush(user);
+
+        restUserMockMvc
+                .perform(
+                        post("/api/users/follow")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(TestUtil.convertObjectToJsonBytes(user.getId())))
+                .andExpect(status().isBadRequest());
+
+
+
+    }
+    @Test
+    @Transactional
+    @WithMockUser(username= DEFAULT_USERNAME,authorities ={"ROLE_USER"})
+    void unfollowUser() throws Exception {
+        User user2 = new User();
+        user2.setUsername("tesgt");
+        user2.setPassword("jskdjsi");
+        user2.setActivated(true);
+        user2.setEmail("ay@localhost.com");
+        user2.setFirstName("firstnam");
+        user2.setLastName("last");
+        userRepository.saveAndFlush(user);
+        user2.getFollowers().add(user);
+        userRepository.saveAndFlush(user2);
+        long before=userFollowersFollowingRepository.count();
+        em.detach(user);
+        em.detach(user2);
+        restUserMockMvc
+                .perform(
+                        post("/api/users/unfollow")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(TestUtil.convertObjectToJsonBytes(user2.getId())))
+                .andExpect(status().isNoContent());
+
+        assertThat(userFollowersFollowingRepository.count()).isEqualTo(before-1);
+        Set<User> following=userRepository.findById(user.getId()).get().getFollowing();
+        assertThat(following).isEmpty();
+
+
+
+    }
+    @Test
+    @Transactional
+    void getUserFollowers() throws Exception {
+        User user2 = new User();
+        user2.setUsername("tesgt");
+        user2.setPassword("jskdjsi");
+        user2.setActivated(true);
+        user2.setEmail("ay@localhost.com");
+        user2.setFirstName("firstnam");
+        user2.setLastName("last");
+        userRepository.saveAndFlush(user);
+        user2.getFollowers().add(user);
+        userRepository.saveAndFlush(user2);
+
+
+        restUserMockMvc
+                .perform(
+                        get("/api/users/{username}/followers",user2.getUsername())
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
+                .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRSTNAME)))
+                .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LASTNAME)))
+                .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)));
+
+
+    }
+
+    @Test
+    @Transactional
+    void getUserFollowing() throws Exception {
+        User user2 = new User();
+        user2.setUsername("tesgt");
+        user2.setPassword("jskdjsi");
+        user2.setActivated(true);
+        user2.setEmail("ay@localhost.com");
+        user2.setFirstName("firstnam");
+        user2.setLastName("last");
+        userRepository.saveAndFlush(user2);
+        user.getFollowers().add(user2);
+        userRepository.saveAndFlush(user);
+
+
+        restUserMockMvc
+                .perform(
+                        get("/api/users/{username}/following",user2.getUsername())
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
+                .andExpect(jsonPath("$.[*].firstName").value(hasItem(DEFAULT_FIRSTNAME)))
+                .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LASTNAME)))
+                .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)));
+
+
     }
 
 
