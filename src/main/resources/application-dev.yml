@@ -23,3 +23,19 @@ logging:
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
     com.example.articlewebapp: DEBUG
+management:
+  endpoints:
+    web:
+      base-path: /management
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+  info:
+    git:
+      mode: full
+    env:
+      enabled: true
+springdoc:
+  show-actuator: true
