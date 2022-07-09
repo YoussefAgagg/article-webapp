@@ -42,7 +42,7 @@ public class AccountResource {
     /**
      * {@code POST  /register} : register the user.
      *
-     * @param userDTO the managed user View Model.
+     * @param userDTO the managed user  Model.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws UsernameAlreadyUsedException {@code 400 (Bad Request)} if the username is already used.
      */

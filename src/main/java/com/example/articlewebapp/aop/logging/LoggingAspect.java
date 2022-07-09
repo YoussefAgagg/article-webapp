@@ -56,7 +56,7 @@ public class LoggingAspect {
      *
      * @param joinPoint join point for advice.
      * @return result.
-     * @throws Throwable throws {@link IllegalArgumentException}.
+     * @throws Throwable if an error occurs
      */
     @Around("execution(* *(..)) && @annotation(com.example.articlewebapp.aop.logging.Loggable)")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {

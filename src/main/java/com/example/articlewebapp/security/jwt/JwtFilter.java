@@ -20,7 +20,6 @@ import java.io.IOException;
  * @author Youssef Agagg
  */
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 

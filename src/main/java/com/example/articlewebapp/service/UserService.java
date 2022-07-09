@@ -151,7 +151,7 @@ public class UserService {
                     log.debug("Deleted User: {}", user);
                 });
     }
-
+    @Loggable
     public Optional<UserDTO> getUserById(Long id) {
         return userRepository.findById(id).map(userMapper::toDto);
     }
@@ -163,11 +163,11 @@ public class UserService {
             throw new BadRequestException("user try to follow himself");
         }
 
-        UserFollowersFollowing userFollowersFollowing=getUserToFollow(followingId, userLogin);
+        UserFollowersFollowing userFollowersFollowing= getFollowersFollowing(followingId, userLogin);
         userFollowersFollowingRepository.save(userFollowersFollowing);
     }
 
-    private UserFollowersFollowing getUserToFollow(Long followingId, User userLogin) {
+    private UserFollowersFollowing getFollowersFollowing(Long followingId, User userLogin) {
         User toFollow=userRepository.findById(followingId)
                 .orElseThrow(()->{throw new BadRequestException("the user doesn't exist");});
 
@@ -185,18 +185,18 @@ public class UserService {
                 .map(userMapper::toDto);
 
     }
-
+    @Loggable
     public Page<UserDTO> getUserFollowing(String username, Pageable pageable) {
         return userRepository.findAllByFollowersUsername(username, pageable)
                 .map(userMapper::toDto);
     }
-
+    @Loggable
     public void unfollowUser(Long followingId) {
         User userLogin = getLoginUser();
         if (Objects.equals(userLogin.getId(),followingId)){
             throw new BadRequestException("user try ro unfollow himself");
         }
-        userFollowersFollowingRepository.delete(getUserToFollow(followingId, userLogin));
+        userFollowersFollowingRepository.delete(getFollowersFollowing(followingId, userLogin));
     }
 
     private User getLoginUser() {

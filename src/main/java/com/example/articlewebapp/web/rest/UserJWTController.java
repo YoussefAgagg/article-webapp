@@ -5,7 +5,10 @@ import com.example.articlewebapp.security.jwt.JwtFilter;
 import com.example.articlewebapp.security.jwt.TokenProvider;
 import com.example.articlewebapp.web.rest.payload.LoginRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -56,21 +59,11 @@ public class UserJWTController {
     /**
      * Object to return as body in JWT Authentication.
      */
+    @AllArgsConstructor
+    @Setter
+    @Getter
     static class JWTToken {
-
-        private String idToken;
-
-        JWTToken(String idToken) {
-            this.idToken = idToken;
-        }
-
         @JsonProperty("id_token")
-        String getIdToken() {
-            return idToken;
-        }
-
-        void setIdToken(String idToken) {
-            this.idToken = idToken;
-        }
+        private String idToken;
     }
 }

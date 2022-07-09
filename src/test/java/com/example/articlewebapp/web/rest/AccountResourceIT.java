@@ -148,7 +148,7 @@ class AccountResourceIT {
         invalidUser.setFirstName("Bob");
         invalidUser.setLastName("Green");
         invalidUser.setEmail("bob@example.com");
-       
+
         AuthorityDTO authority=new AuthorityDTO();
         authority.setName(AuthoritiesConstants.USER);
         invalidUser.setAuthorities(Collections.singleton(authority));
@@ -171,8 +171,7 @@ class AccountResourceIT {
         firstUser.setFirstName("Alice");
         firstUser.setLastName("Something");
         firstUser.setEmail("alice@example.com");
-        firstUser.setImageUrl("http://placehold.it/50x50");
-       
+
         AuthorityDTO authority=new AuthorityDTO();
         authority.setName(AuthoritiesConstants.USER);
         firstUser.setAuthorities(Collections.singleton(authority));
@@ -185,7 +184,7 @@ class AccountResourceIT {
         secondUser.setLastName(firstUser.getLastName());
         secondUser.setEmail("alice2@example.com");
         secondUser.setImageUrl(firstUser.getImageUrl());
-      
+
         secondUser.setAuthorities(new HashSet<>(firstUser.getAuthorities()));
 
         // First user
@@ -212,7 +211,7 @@ class AccountResourceIT {
         firstUser.setLastName("Test");
         firstUser.setEmail("test-register-duplicate-email@example.com");
         firstUser.setImageUrl("http://placehold.it/50x50");
-        
+
         AuthorityDTO authority=new AuthorityDTO();
         authority.setName(AuthoritiesConstants.USER);
         firstUser.setAuthorities(Collections.singleton(authority));
@@ -255,7 +254,7 @@ class AccountResourceIT {
         userWithUpperCaseEmail.setLastName(firstUser.getLastName());
         userWithUpperCaseEmail.setEmail("TEST-register-duplicate-email@example.com");
         userWithUpperCaseEmail.setImageUrl(firstUser.getImageUrl());
-        
+
         userWithUpperCaseEmail.setAuthorities(new HashSet<>(firstUser.getAuthorities()));
 
         // Register third
@@ -281,7 +280,6 @@ class AccountResourceIT {
         validUser.setLastName("Guy");
         validUser.setEmail("badguy@example.com");
         validUser.setActivated(true);
-        validUser.setImageUrl("http://placehold.it/50x50");
              AuthorityDTO authority=new AuthorityDTO();
         authority.setName(AuthoritiesConstants.ADMIN);
         validUser.setAuthorities(Collections.singleton(authority));

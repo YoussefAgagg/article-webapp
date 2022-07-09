@@ -80,7 +80,7 @@ class TokenProviderTest {
     }
 
     @Test
-    void isValidJwtTokenWithBadSignatureJwtToken(TestInfo testInfo) {
+    void isValidJwtTokenWithBadSignatureJwtToken() {
         boolean isTokenValid = tokenProvider.validateToken(createTokenWithDifferentSignature());
 
         assertThat(isTokenValid).isFalse();

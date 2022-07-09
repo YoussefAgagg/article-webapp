@@ -2,6 +2,7 @@ package com.example.articlewebapp.service;
 
 
 import com.example.articlewebapp.domain.User;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -18,27 +19,18 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MailService {
 
-
-    private static final String USER = "user";
     @Value("${app.baseUrl}")
-    private   String baseUrl = "baseUrl";
+    private String baseUrl = "baseUrl";
     @Value("email.name")
-    private   String emailFrom = "hah@gmail.com";
+    private String emailFrom = "hah@gmail.com";
 
     private final JavaMailSender javaMailSender;
 
-
     private final SpringTemplateEngine templateEngine;
 
-    public MailService(
-        JavaMailSender javaMailSender,
-        SpringTemplateEngine templateEngine
-    ) {
-        this.javaMailSender = javaMailSender;
-        this.templateEngine = templateEngine;
-    }
 
     @Async
     public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
