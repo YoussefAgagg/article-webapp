@@ -11,7 +11,7 @@ import com.example.articlewebapp.security.SecurityUtils;
 import com.example.articlewebapp.service.ArticleService;
 import com.example.articlewebapp.service.CommentService;
 import com.example.articlewebapp.service.UserService;
-import com.example.articlewebapp.service.dto.CommentDTO;
+import com.example.articlewebapp.dto.CommentDTO;
 import com.example.articlewebapp.web.rest.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

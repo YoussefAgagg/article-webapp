@@ -4,8 +4,7 @@ import com.example.articlewebapp.domain.User;
 import com.example.articlewebapp.repository.AuthorityRepository;
 import com.example.articlewebapp.repository.UserRepository;
 import com.example.articlewebapp.security.AuthoritiesConstants;
-import com.example.articlewebapp.service.UserService;
-import com.example.articlewebapp.service.dto.AuthorityDTO;
+import com.example.articlewebapp.dto.AuthorityDTO;
 
 import com.example.articlewebapp.web.rest.payload.KeyAndPasswordRequest;
 import com.example.articlewebapp.web.rest.payload.PasswordChange;
@@ -19,11 +18,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

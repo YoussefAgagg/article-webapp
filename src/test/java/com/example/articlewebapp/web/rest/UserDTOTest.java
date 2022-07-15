@@ -1,10 +1,8 @@
 package com.example.articlewebapp.web.rest;
 
 import com.example.articlewebapp.domain.enumerations.Gender;
-import com.example.articlewebapp.service.dto.ArticleDTO;
-import com.example.articlewebapp.service.dto.AuthorityDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.example.articlewebapp.dto.ArticleDTO;
+import com.example.articlewebapp.dto.AuthorityDTO;
 import lombok.Data;
 import lombok.ToString;
 

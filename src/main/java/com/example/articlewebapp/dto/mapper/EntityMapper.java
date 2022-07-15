@@ -1,4 +1,4 @@
-package com.example.articlewebapp.service.dto.mapper;
+package com.example.articlewebapp.dto.mapper;
 
 
 import org.mapstruct.BeanMapping;

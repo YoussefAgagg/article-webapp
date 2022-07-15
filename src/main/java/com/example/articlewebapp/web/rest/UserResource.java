@@ -10,7 +10,7 @@ import com.example.articlewebapp.repository.UserRepository;
 import com.example.articlewebapp.security.AuthoritiesConstants;
 import com.example.articlewebapp.security.SecurityUtils;
 import com.example.articlewebapp.service.UserService;
-import com.example.articlewebapp.service.dto.UserDTO;
+import com.example.articlewebapp.dto.UserDTO;
 import com.example.articlewebapp.web.rest.payload.UpdateUserData;
 import com.example.articlewebapp.web.rest.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;

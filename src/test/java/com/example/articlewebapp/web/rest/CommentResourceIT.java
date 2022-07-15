@@ -6,8 +6,8 @@ import com.example.articlewebapp.domain.User;
 import com.example.articlewebapp.repository.ArticleRepository;
 import com.example.articlewebapp.repository.CommentRepository;
 import com.example.articlewebapp.repository.UserRepository;
-import com.example.articlewebapp.service.dto.CommentDTO;
-import com.example.articlewebapp.service.dto.mapper.CommentMapper;
+import com.example.articlewebapp.dto.CommentDTO;
+import com.example.articlewebapp.dto.mapper.CommentMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

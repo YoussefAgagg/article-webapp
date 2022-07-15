@@ -1,10 +1,8 @@
-package com.example.articlewebapp.service.dto.mapper;
+package com.example.articlewebapp.dto.mapper;
 
 import com.example.articlewebapp.domain.Category;
 
-import com.example.articlewebapp.domain.User;
-import com.example.articlewebapp.service.dto.CategoryDTO;
-import com.example.articlewebapp.service.dto.UserDTO;
+import com.example.articlewebapp.dto.CategoryDTO;
 import org.mapstruct.Mapper;
 /**
  * Mapper for the entity {@link Category} and its DTO {@link CategoryDTO}.

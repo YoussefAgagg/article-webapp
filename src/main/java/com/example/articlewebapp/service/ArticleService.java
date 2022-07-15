@@ -7,8 +7,8 @@ import com.example.articlewebapp.repository.ArticleLikesDislikesRepository;
 import com.example.articlewebapp.repository.ArticleRepository;
 import com.example.articlewebapp.repository.UserRepository;
 import com.example.articlewebapp.security.SecurityUtils;
-import com.example.articlewebapp.service.dto.ArticleDTO;
-import com.example.articlewebapp.service.dto.mapper.ArticleMapper;
+import com.example.articlewebapp.dto.ArticleDTO;
+import com.example.articlewebapp.dto.mapper.ArticleMapper;
 
 import com.example.articlewebapp.web.rest.payload.LikeRequest;
 import lombok.RequiredArgsConstructor;

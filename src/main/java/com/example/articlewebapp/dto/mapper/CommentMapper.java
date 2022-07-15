@@ -1,7 +1,7 @@
-package com.example.articlewebapp.service.dto.mapper;
+package com.example.articlewebapp.dto.mapper;
 
 import com.example.articlewebapp.domain.Comment;
-import com.example.articlewebapp.service.dto.CommentDTO;
+import com.example.articlewebapp.dto.CommentDTO;
 import org.mapstruct.Mapper;
 /**
  * Mapper for the entity {@link Comment} and its DTO {@link CommentDTO}.

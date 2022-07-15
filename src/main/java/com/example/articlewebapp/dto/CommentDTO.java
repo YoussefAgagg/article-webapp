@@ -1,21 +1,12 @@
-package com.example.articlewebapp.service.dto;
+package com.example.articlewebapp.dto;
 
-import com.example.articlewebapp.domain.Article;
-import com.example.articlewebapp.domain.User;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.Hibernate;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Objects;
 
 /**
  *  @author Mohamed Ehab Ali

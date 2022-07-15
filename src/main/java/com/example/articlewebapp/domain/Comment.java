@@ -52,7 +52,7 @@ public class Comment implements Serializable {
     private User user;
 
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @JsonIgnoreProperties(value = { "comments", "categories", "author" }, allowSetters = true)
     private Article article;

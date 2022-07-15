@@ -1,6 +1,5 @@
-package com.example.articlewebapp.service.dto;
+package com.example.articlewebapp.dto;
 
-import com.example.articlewebapp.domain.Authority;
 import com.example.articlewebapp.domain.enumerations.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

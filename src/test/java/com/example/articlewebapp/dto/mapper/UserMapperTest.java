@@ -1,8 +1,9 @@
-package com.example.articlewebapp.service.dto.mapper;
+package com.example.articlewebapp.dto.mapper;
 
 import com.example.articlewebapp.domain.Authority;
 import com.example.articlewebapp.domain.User;
-import com.example.articlewebapp.service.dto.UserDTO;
+import com.example.articlewebapp.dto.UserDTO;
+import com.example.articlewebapp.dto.mapper.UserMapper;
 import liquibase.repackaged.org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
