@@ -53,4 +53,4 @@ An API for simple article management system where users can write articles of in
     - http://localhost:8080/api/{article_id}/comments/{comment_id}
 * The `get` endpoints are not secured and are open to all users.
 ### Swagger UI:
-- http://localhost:8080/swagger-ui/
+- http://localhost:8080/swagger-ui/index.html
