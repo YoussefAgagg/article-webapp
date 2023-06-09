@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="155" author="Youssef Agagg">
+        <loadData
+                file="liquibase/data/user.csv"
+                separator=";"
+                tableName="user"
+                usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="activated" type="boolean"/>
+        </loadData>
+
+        <loadData
+                file="liquibase/data/authority.csv"
+                separator=";"
+                tableName="authority"
+                usePreparedStatements="true">
+            <column name="name" type="string"/>
+        </loadData>
+        <loadData
+                file="liquibase/data/user_authority.csv"
+                separator=";"
+                tableName="user_authority"
+                usePreparedStatements="true">
+            <column name="user_id" type="numeric"/>
+        </loadData>
+        <loadData
+                file="/liquibase/data/article.csv"
+                separator=";"
+                tableName="article"
+                usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="title" type="string"/>
+            <column name="summery" type="string"/>
+            <column name="content" type="clob"/>
+            <column name="views" type="numeric"/>
+            <column name="date_created" type="date"/>
+            <column name="last_edited" type="date"/>
+            <column name="user_id" type="numeric"/>
+        </loadData>
+        <loadData
+                file="/liquibase/data/comment.csv"
+                separator=";"
+                tableName="comment"
+                usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="text" type="string"/>
+            <column name="date_created" type="date"/>
+            <column name="last_edited" type="date"/>
+            <column name="user_id" type="numeric"/>
+            <column name="article_id" type="numeric"/>
+        </loadData>
+        <loadData
+                file="/liquibase/data/category.csv"
+                separator=";"
+                tableName="category"
+                usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="name" type="string"/>
+        </loadData>
+        <loadData
+                file="/liquibase/data/article_category.csv"
+                separator=";"
+                tableName="article_category"
+                usePreparedStatements="true">
+            <column name="article_id" type="numeric"/>
+            <column name="category_id" type="numeric"/>
+        </loadData>
+        <loadData
+                file="/liquibase/data/article_likes_dislikes.csv"
+                separator=";"
+                tableName="article_likes_dislikes"
+                usePreparedStatements="true">
+            <column name="article_id" type="numeric"/>
+            <column name="user_id" type="numeric"/>
+            <column name="like_type" type="numeric"/>
+        </loadData>
+        <loadData
+                file="/liquibase/data/user_followers_following.csv"
+                separator=";"
+                tableName="user_followers_following"
+                usePreparedStatements="true">
+            <column name="user_id" type="numeric"/>
+            <column name="followers_id" type="numeric"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

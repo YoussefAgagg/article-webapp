@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet id="10000" author="youssef agagg">
+        <createTable tableName="comment">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="text" type="${clobType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="date_created" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_edited" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="article_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+
+        </createTable>
+        <dropDefaultValue tableName="comment" columnName="date_created" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="comment" columnName="last_edited" columnDataType="${datetimeType}"/>
+    </changeSet>
+    <changeSet id="10001" author="youssef agagg">
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="comment"
+                                 constraintName="fk_comment_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseColumnNames="article_id"
+                                 baseTableName="comment"
+                                 constraintName="fk_comment_article_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="article"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>

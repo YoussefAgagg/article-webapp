@@ -9,9 +9,33 @@ spring:
     password:
     driver-class-name: org.h2.Driver
   liquibase:
+    enabled: true
     change-log: liquibase/changelog/master.xml
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: true
     database-platform: org.hibernate.dialect.H2Dialect
+logging:
+  level:
+    ROOT: Error
+    org.springframework.web : DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    com.example.articlewebapp: DEBUG
+management:
+  endpoints:
+    web:
+      base-path: /management
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+  info:
+    git:
+      mode: full
+    env:
+      enabled: true
+springdoc:
+  show-actuator: true
